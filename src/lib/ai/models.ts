@@ -10,6 +10,11 @@ import {
   XAI_FILE_MIME_TYPES,
 } from "./file-support";
 
+// Helper to extract modelId from LanguageModel (which can be string or object)
+function getModelId(model: LanguageModel): string {
+  return typeof model === "string" ? model : model.modelId;
+}
+
 // ============================================================================
 // 模型配置 - 使用 Vercel AI Gateway
 // ============================================================================
@@ -196,14 +201,14 @@ for (const provider of modelConfigs) {
 const DEFAULT_MODEL_ID = "openai/gpt-4.1";
 
 export const isToolCallUnsupportedModel = (model: LanguageModel): boolean => {
-  const config = modelConfigMap.get(model.modelId);
+  const config = modelConfigMap.get(getModelId(model));
   return config?.toolCallUnsupported ?? false;
 };
 
 export const getFilePartSupportedMimeTypes = (
   model: LanguageModel,
 ): readonly string[] => {
-  const config = modelConfigMap.get(model.modelId);
+  const config = modelConfigMap.get(getModelId(model));
   return config?.fileMimeTypes ?? DEFAULT_FILE_PART_MIME_TYPES;
 };
 
